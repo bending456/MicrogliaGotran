@@ -172,7 +172,7 @@ dQ12_ptxf_dt    = a1p*C2_ptxf + b3p*D34_ptxf - (b3m + a1m)*Q12_ptxf
 ## Convert open probability to current via P2X channel
 parameters("Ip2x4",
         ## Conductance
-        G12_ptxf = ScalarParam(6.15e-10, unit="C*/(s*V)"),
+        G12_ptxf = ScalarParam(8.15e-10, unit="C*/(s*V)"),
         # Reversal potential
         E12_ptxf = ScalarParam(0,        unit="V"),
         # Fraction of Calcium among other substances
@@ -247,7 +247,7 @@ dQ12_ptxs_dt    = y1p*C2_ptxs - y1m*Q12_ptxs#
 ## Convert open probability to current via P2X channel
 parameters("Ip2x7",
         # Conductance
-        G12_ptxs = ScalarParam(1e-8, unit="C/(s*V)"), 
+        G12_ptxs = ScalarParam(2e-8, unit="C/(s*V)"), 
         # Reversal potential
         E12_ptxs = ScalarParam(0,    unit="V"),
         # Fraction of Calcium among other substances -> It may be larger
@@ -643,7 +643,7 @@ dx000_dt = -V1yk - V3yk
 dx001_dt = V1yk - V4yk
 dx010_dt = V3yk - V2yk
 
-IP3R = (J1yk - J2yk)*1000 #<-- nM/s
+IP3R = (J1yk - J2yk)*30 #<-- nM/s
 ################################################################################
 
 ####################################################################################
@@ -746,7 +746,7 @@ dx0002_dt = -V1yk2 - V3yk2
 dx0012_dt = V1yk2 - V4yk2
 dx0102_dt = V3yk2 - V2yk2
 
-IP3R2 = (J1yk2 - J2yk2)*500 #<-- nM/s
+IP3R2 = (J1yk2 - J2yk2)*200 #<-- nM/s
 ################################################################################
 
 
@@ -781,9 +781,9 @@ states("P2Y12",
     )
 
 expressions("P2Y12")
-dp2y12a_dt  = kf1_p2y12*(p2y12tot*rhop2y12-p2y12a)*ATP3 - kb1_p2y12*p2y12a
-dGb_dt      = p2y12a*kf2_p2y12 - kdeg1_p2y12*Gb**2
 dsignalCa_dt  = kf6_p2y12*(Cai-Ca0) - kb6_p2y12*signalCa
+dp2y12a_dt  = kf1_p2y12*(0.7*(p2y12tot*rhop2y12-p2y12a)+0.3*signalCa)*ATP3 - kb1_p2y12*p2y12a
+dGb_dt      = p2y12a*kf2_p2y12 - kdeg1_p2y12*Gb**2
 dPI3Ks_dt   = kf3_p2y12*signalCa*(PI3Ktot-PI3Ks-PI3Ka) - kb3_p2y12*PI3Ks - kf4_p2y12*PI3Ks*Gb
 dPI3Ka_dt   = kf4_p2y12*PI3Ks*Gb - kb4_p2y12*PI3Ka
 dpAkt_dt    = kf5_p2y12*(Akttot-pAkt)*PI3Ka - kb5_p2y12*pAkt 
