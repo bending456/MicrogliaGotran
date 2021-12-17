@@ -651,7 +651,7 @@ IP3R = (J1yk - J2yk)*30 #<-- nM/s
 parameters("IP32",
     # Unit for the following parameters is based on nM
     Kgcc2 = 51, # low -> up IP3 amp
-    Kdcc2 = 3.0, # low - high freq, high - low freq
+    Kdcc2 = 2.9, # low - high freq, high - low freq 2.9
     Kscc2 = 5,
     Kpcc2 = 40,
     Kccc2 = 20, # 20
@@ -704,12 +704,12 @@ states("IP32",
     )
 
 expressions("IP32")
-acc2     = 0.010/(1+(15/ATP1)) 
+acc2     = 0.010 
 ScalebyATP2  = Conditional(Eq(DegSwitch,1),ATP**0.5,1)
 
 IP3cc2 = DAGcc2 
 gcc2 = GaGTPcc2/Kgcc2 
-dcc2 = DAGcc2/(Kdcc2-0.1/(1+(170/ATP1)**5))
+dcc2 = DAGcc2/Kdcc2
 scc2 = IP3cc2/Kscc2
 
 RPKCcc2 = ((DAGcc2)/(Kpcc2 + DAGcc2))*(Cai)/(Kccc2+(Cai)) 
