@@ -552,7 +552,6 @@ parameters("IP3",
     hccc = 0.4,
     kdcc = 31, # nothing to do with freq but lower the amp
     hdcc = 0.62, # nothing to do with freq and amp for now
-    ldcc = 0.1, # no freq no amp
     kacc = 10, # up -> lower agonist sensitivity 
     kreccc = 0.01, # low -> 
     hreccc = 10,    
@@ -660,7 +659,6 @@ parameters("IP32",
     hccc2 = 0.4,
     kdcc2 = 31, # nothing to do with freq but lower the amp
     hdcc2 = 0.62, # nothing to do with freq and amp for now
-    ldcc2 = 0.1, # no freq no amp
     kacc2 = 10, # up -> lower agonist sensitivity 
     kreccc2 = 0.01, # low -> 
     hreccc2 = 10,    
