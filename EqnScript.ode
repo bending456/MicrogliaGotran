@@ -25,7 +25,7 @@
 parameters("stimulation",###########################################################
         stim_period     = ScalarParam(3,           unit="s"), # stim_duration = stim_period/2
         stim_amplitude  = ScalarParam(100,         unit="uM"), ## 1 mM
-        stim_amplitude2 = ScalarParam(100,         unit="uM")
+        stim_amplitude2 = ScalarParam(100,         unit="uM"),
         stim_duration   = ScalarParam(60,          unit="s"),
         stim_low        = ScalarParam(1,   unit="s"),
         stim_high       = ScalarParam(2, unit="s"),
@@ -605,7 +605,7 @@ states("IP3",
     )
 
 expressions("IP3")
-acc     = 0.010/(1+(20/ATP1)) + 0.010/(1+{10/UTP})
+acc     = 0.010/(1+(20/ATP1)) + 0.010/(1+(10/UTP))
 ScalebyATP  = Conditional(Eq(DegSwitch,1),ATP**0.5,1)
 
 IP3cc = DAGcc 
