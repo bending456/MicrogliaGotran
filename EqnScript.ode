@@ -57,7 +57,8 @@ parameters("stimulation",#######################################################
         k1degATP        = ScalarParam(0.002,        unit="1/s"),
         k2degATP        = ScalarParam(0.008,        unit="1/s"),
         EleSwitch       = ScalarParam(0),
-        PulSwitch       = ScalarParam(0)
+        PulSwitch       = ScalarParam(0),
+        SponSwitch      = ScalarParam(1)
         )
 ##########################################################################
 ## Don't remove "V" since this must be appeared to incorperate with Pete's code (daisychain)
@@ -710,7 +711,7 @@ states("IP32",
     )
 
 expressions("IP32")
-acc2     = 0.010 
+acc2     = 0.010*SponSwitch 
 ScalebyATP2  = Conditional(Eq(DegSwitch,1),ATP**0.5,1)
 
 IP3cc2 = DAGcc2 
