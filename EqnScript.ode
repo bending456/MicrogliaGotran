@@ -19,11 +19,13 @@
 ## B. Migration is a function of P2Y12 at this point. This may need to be improved.
 ## C. Unlike the previous model submitted to Journal of Physiology, this model doesn't
 ## induce artifical periodic stimulation 
+## D. UTP - > Associated with only P2Y receptors 
 ###################################################################################
 
 parameters("stimulation",###########################################################
         stim_period     = ScalarParam(3,           unit="s"), # stim_duration = stim_period/2
         stim_amplitude  = ScalarParam(100,         unit="uM"), ## 1 mM
+        stim_amplitude2 = ScalarParam(100,         unit="uM"),
         stim_duration   = ScalarParam(60,          unit="s"),
         stim_low        = ScalarParam(1,   unit="s"),
         stim_high       = ScalarParam(2, unit="s"),
@@ -55,7 +57,8 @@ parameters("stimulation",#######################################################
         k1degATP        = ScalarParam(0.002,        unit="1/s"),
         k2degATP        = ScalarParam(0.008,        unit="1/s"),
         EleSwitch       = ScalarParam(0),
-        PulSwitch       = ScalarParam(0)
+        PulSwitch       = ScalarParam(0),
+        SponSwitch      = ScalarParam(1)
         )
 ##########################################################################
 ## Don't remove "V" since this must be appeared to incorperate with Pete's code (daisychain)
@@ -99,6 +102,10 @@ ATP3b = Conditional(Ge(time,stim_duration),0,ATP3a)
 ATP1 = Conditional(Eq(PulSwitch,1),ATP1b,ATP1a)
 ATP2 = Conditional(Eq(PulSwitch,1),ATP2b,ATP2a)
 ATP3 = Conditional(Eq(PulSwitch,1),ATP3b,ATP3a)
+
+UTPa = Conditional(Eq(DegSwitch,1),stim_amplitude2*ATP,stim_amplitude2) # Using ATP's degradation rate 
+UTPb = Conditional(Ge(time,stim_duration),0,UTPa)
+UTP = Conditional(Eq(PulSwitch,1),UTPb,UTPa)
 ################################################################################
 states("Ca_cyto",
     Cai = ScalarParam(100.03826, unit="nM")
@@ -540,6 +547,7 @@ dTNFae_dt   = (Dce/(1+(kdCaTNF/(Cai-Ca0))**nCaTNF))*(TNFac-TNFae)
 
 ####################################################################################
 ## Cuthbertson-Chay Model + Young-Keizer Model for IP3R 
+## ATP/UTP based mechanism
 parameters("IP3",
     # Unit for the following parameters is based on nM
     Kgcc = 51, # low -> up IP3 amp
@@ -552,7 +560,6 @@ parameters("IP3",
     hccc = 0.4,
     kdcc = 31, # nothing to do with freq but lower the amp
     hdcc = 0.62, # nothing to do with freq and amp for now
-    ldcc = 0.1, # no freq no amp
     kacc = 10, # up -> lower agonist sensitivity 
     kreccc = 0.01, # low -> 
     hreccc = 10,    
@@ -599,7 +606,7 @@ states("IP3",
     )
 
 expressions("IP3")
-acc     = 0.010/(1+(20/ATP1)) 
+acc     = 0.010/(1+(20/ATP1)) + 0.010/(1+(10/UTP))
 ScalebyATP  = Conditional(Eq(DegSwitch,1),ATP**0.5,1)
 
 IP3cc = DAGcc 
@@ -648,10 +655,11 @@ IP3R = (J1yk - J2yk)*30 #<-- nM/s
 
 ####################################################################################
 ## Cuthbertson-Chay Model + Young-Keizer Model for IP3R 
+## Spontaneous (no ATP/UTP is required to activate this mechanism)
 parameters("IP32",
     # Unit for the following parameters is based on nM
     Kgcc2 = 51, # low -> up IP3 amp
-    Kdcc2 = 3.0, # low - high freq, high - low freq
+    Kdcc2 = 2.9, # low - high freq, high - low freq 2.9
     Kscc2 = 5,
     Kpcc2 = 40,
     Kccc2 = 20, # 20
@@ -660,7 +668,6 @@ parameters("IP32",
     hccc2 = 0.4,
     kdcc2 = 31, # nothing to do with freq but lower the amp
     hdcc2 = 0.62, # nothing to do with freq and amp for now
-    ldcc2 = 0.1, # no freq no amp
     kacc2 = 10, # up -> lower agonist sensitivity 
     kreccc2 = 0.01, # low -> 
     hreccc2 = 10,    
@@ -704,12 +711,12 @@ states("IP32",
     )
 
 expressions("IP32")
-acc2     = 0.010/(1+(15/ATP1)) 
+acc2     = 0.010*SponSwitch 
 ScalebyATP2  = Conditional(Eq(DegSwitch,1),ATP**0.5,1)
 
 IP3cc2 = DAGcc2 
 gcc2 = GaGTPcc2/Kgcc2 
-dcc2 = DAGcc2/(Kdcc2-0.1/(1+(170/ATP1)**5))
+dcc2 = DAGcc2/Kdcc2
 scc2 = IP3cc2/Kscc2
 
 RPKCcc2 = ((DAGcc2)/(Kpcc2 + DAGcc2))*(Cai)/(Kccc2+(Cai)) 

@@ -10,6 +10,7 @@ import time
 
 def gotranMicroglia(sim_time        = 1000,
                     ATP             = 0, # in uM
+                    UTP             = 0, # in uM
                     period          = 3,
                     data_name1      = 'Cai',
                     data_name2      = None,
@@ -45,6 +46,7 @@ def gotranMicroglia(sim_time        = 1000,
 
     ######### Assign new parameters if necessary #########
     variables = ['-var','stim_amplitude', str(ATP), # ATP concentration in [nM]
+                 '-var','stim_amplitude2', str(UTP),
                  '-var','stim_period',    str(period)] 
     ######################################################
     
