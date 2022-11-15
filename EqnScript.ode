@@ -93,7 +93,7 @@ dAMP_dt = k2degATP*ADP
 ##########################################################################
 ATP1a = Conditional(Eq(DegSwitch,1),stim_amplitude*ATP,stim_amplitude)        ### This goes to P2Y: in the unit of uM
 ATP2a = Conditional(Eq(DegSwitch,1),stim_amplitude*ATP*10**-6,stim_amplitude*10**-6) ### This goes to P2X: in the unit of M
-ATP3a = Conditional(Eq(DegSwitch,1),stim_amplitude*ADP,stim_amplitude*0.2)        ### This goes to P2Y12: in the unti of uM
+ATP3a = Conditional(Eq(DegSwitch,1),stim_amplitude*ADP,0.0)        ### This goes to P2Y12: in the unti of uM
 
 ATP1b = Conditional(Ge(time,stim_duration),0,ATP1a)
 ATP2b = Conditional(Ge(time,stim_duration),0,ATP2a)
